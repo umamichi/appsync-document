@@ -5,7 +5,7 @@
 
 GraphQLというAPI仕様を用いて「柔軟なAPI」を提供するマネジメントサービス。AWSが提供している
 
-対して、従来の REST API だと AWSは API Gateway を提供しています。
+ちなみに、従来の REST API 形式だと AWSは API Gateway を提供している
 
 ## GraphQLとは？
 
@@ -15,7 +15,8 @@ REST API は、1URLに対し1つのAPIや情報を提供できるのに対し、
 
 GraphQL は欲しいデータを以下のようなクエリとして発行すると、**欲しいデータを欲しいObject形式で**得ることができます
 
-```
+```javascript
+// リクエスト
 query GetCurrentUser {
   currentUser {
     id
@@ -23,6 +24,16 @@ query GetCurrentUser {
   }
 }
 
+```
+
+↓
+
+```javascript
+// レスポンス
+{
+  id: 'hoge',
+  name: 'yamada'
+}
 ```
 
 ## AppSyncの仕組み
@@ -36,6 +47,26 @@ AppSyncは直接DynamoDBの値を取得・更新・削除することができ�
 AppSyncは **Lambda レス** でDynamoDBへのアクセスが可能です。
 
 代わりに、AppSync内のリゾルバーという領域にロジックを記述します。
+
+### クエリ
+
+実行されるGraphQlのこと
+
+### スキーマ
+
+どの型の値をどこで使うかを定義する設計書
+
+### リゾルバー
+
+関数のこと。ロジックを記述する。
+
+リゾルバーは、`リクエストマッピングテンプレート` と `レスポンスマッピングテンプレート` で構成さる
+
+`リクエストマッピングテンプレート` は、「変換」と「実行」のロジックが含まれている
+
+### リソース
+
+データベースのこと。AppSync では `AWS DynamoDB` に自動的に接続される
 
 ## AppSyncの料金
 
@@ -130,7 +161,7 @@ query ListEvents {
 こちらに従って進めてみましょう -->
  
 
-### 実際にGraphQLを試してみる
+### 実際に Javascript で GraphQL を使ってみる
 
 Axios を使って試してみます
 
@@ -188,83 +219,97 @@ appSyncでは、4つの認証方法が用意されています
 
 
 
-### APIを追加してみる
+### APIを変更・追加してみる
 
 
+#### createEvent に `who` という項目を追加してみる
+
+AWSコンソールの左メニューから `スキーマ` を選択すると、定義されている Schema が表示されます
+
+この中から、 `Mutation` の下にある `createEvent` を見つけ、引数に `who` を追加してみます
+
+![スクリーンショット 2020-10-28 19 28 00](https://user-images.githubusercontent.com/7469495/97424426-0e222c80-1954-11eb-99c2-76ea52ab1f5d.png)
+
+右上から　`スキーマを保存` します
+
+`クエリ` ページから、who に適当な値を追加して、実行してみます
+
+![image](https://user-images.githubusercontent.com/7469495/97554741-8b17d980-1a1a-11eb-883b-df4e39437046.png)
 
 
+これで、dynamoDBに `who` が追加されたか確認してみましょう
 
-------
+左メニューから `データソース` -> `AppSyncEventTable` のリソースを開きます
 
-Node.js 14系（14.4.0）で試してみます
+あれ、項目 `who` が追加されていると思いましたが、追加されていません
 
-作業用ディレクトリをつくる
+![image](https://user-images.githubusercontent.com/7469495/97555381-6708c800-1a1b-11eb-8ecc-917b5e80cb44.png)
 
-```sh
-$ mkdir appSyncSample && appSyncSample
+理由は簡単です、 `リゾルバー` も変更の必要があります
+
+※画面上部の図を参照
+
+`リゾルバー` は、 `スキーマ` ページの右カラムから編集することができます
+
+`createEvent` を見つけましょう
+
+![image](https://user-images.githubusercontent.com/7469495/97555776-e4343d00-1a1b-11eb-955c-1aa84a2b914f.png)
+
+`リクエストマッピングテンプレート` を以下のようにして、 `who` を追記します
+
+
+```json
+{
+    "version": "2017-02-28",
+    "operation": "PutItem",
+    "key": {
+        "id": { "S": "$util.autoId()"}
+    },
+    "attributeValues": {
+        "name": { "S": "$context.arguments.name" },
+        "where": { "S": "$context.arguments.where" },
+        "when": { "S": "$context.arguments.when" },
+        "who": { "S": "$context.arguments.who" },
+        "description": { "S": "$context.arguments.description" }
+    }
+}
 ```
 
-次に、AWS Amplify CLI をインストールします
+リゾルバーを保存して、実行すると、`who` 項目が追加されていることが確認できました🎉
 
-Amplify も AWSのサービスで Hosting server として使ったことがある方がいるかもしれません
-
-どうやら Amplify と AppSync と合わせて使うと、とても簡単にWebサービスが作れるようです
-
-まずは気にせず、進めてみます
-
-```
-$ npm install -g @aws-amplify/cli
-…
-…
-省略
-….
-----------------------------------------
-Successfully installed the Amplify CLI
-----------------------------------------
-```
-
-↑ Successfully と出れば成功
-
-ここで、ターミナルを再起動しておきましょう
-
-```
-$ amplify init
-```
-
-質問事項が出るので答えながら進めてみましょう
-
-途中で IAMユーザーを作成して、アクセスキーをコピペする箇所が出てくるので注意しましょう
-
-```
-$ amplify add codegen --apiId [your API key]
-$ amplify codegen
-```
-
-これで、graphQLの必要なコードが自動生成されました
-
-あとはここに好きなフレームワークで実装をしていきます
-
-or POSTMAN or axios で実装するとか
+![image](https://user-images.githubusercontent.com/7469495/97556176-6fadce00-1a1c-11eb-95ee-f465e07f5ef8.png)
 
 
-------------
+今回は内部の挙動を理解するために、
+
+ブラウザからAWSコンソールを通じてスキーマやリゾルバーの変更を行いましたが、
+
+実際には `AWS Cloudformation` や `Amplify Framework` などを用いると良いそうです。
+
+## まとめ
+
+### メリット
+
++ GraphQL は REST API に**比べて欲しいデータを欲しい形式で**得ることが可能
+  
++ GraphQlにより、画面や機能ごとに、**個別にAPIを定義するコストが削減**される
+
++ AppSync を使えばリソース（DynamoDB）との連携を楽に行うことができる
+  
++ REST API を AppSync でラップして、GraphQlを導入することも可能（未調査）
 
 
-PostManで試せる
-POST、bodyにqueryを持たせる。Paramsではない
+### デメリット
 
-headerに、appsync の api key を持たせるとリクエストできる
++ GraphQl, Appsync の学習コストは少なからずかかる
 
++ 効率的にデータを処理できないので、パフォーマンスが低下し、N+1問題が発生する
 
-------------
-
-HTTPリクエストの仕様
-
-hederって何？　ヘッダー。リクエストの詳細情報があります。
-paramsって何？　GETのqueryのこと。PostManで、POST時はqueryとなる挙動をするが実際に使うことはない
-bodyって何？　GETとDELETE以外に存在する。POSTで値を渡すときに使う。
-graphQLは中身はPOST
 
 ## 参考
 
+https://docs.aws.amazon.com/ja_jp/appsync/latest/devguide/welcome.html
+
 https://xp-cloud.jp/blog/2020/06/01/7159/
+
+
