@@ -1,4 +1,4 @@
-## AppSync&GraphQL入門
+## AppSync & GraphQL 入門
 
 
 ## AppSyncとは？
@@ -241,17 +241,17 @@ AWSコンソールの左メニューから `スキーマ` を選択すると、�
 
 左メニューから `データソース` -> `AppSyncEventTable` のリソースを開きます
 
-あれ、項目 `who` が追加されていると思いましたが、追加されていません
+あれ、項目 `who` が追加されていると思いましたが、追加されていません😢
 
 ![image](https://user-images.githubusercontent.com/7469495/97555381-6708c800-1a1b-11eb-8ecc-917b5e80cb44.png)
 
-理由は簡単です、 `リゾルバー` も変更の必要があります
+理由は簡単です、 `リゾルバー` も変更する必要があります💡
 
-※画面上部の図を参照
+`リゾルバー` とは、このページの冒頭で表示した図にあるように、ロジックを記述する領域です
 
-`リゾルバー` は、 `スキーマ` ページの右カラムから編集することができます
+`リゾルバー` の変更は、 `スキーマ` ページの右カラムから可能です
 
-`createEvent` を見つけましょう
+`createEvent` を見つけましょう⤵︎
 
 ![image](https://user-images.githubusercontent.com/7469495/97555776-e4343d00-1a1b-11eb-955c-1aa84a2b914f.png)
 
@@ -263,14 +263,14 @@ AWSコンソールの左メニューから `スキーマ` を選択すると、�
     "version": "2017-02-28",
     "operation": "PutItem",
     "key": {
-        "id": { "S": "$util.autoId()"}
+      "id": { "S": "$util.autoId()"}
     },
     "attributeValues": {
-        "name": { "S": "$context.arguments.name" },
-        "where": { "S": "$context.arguments.where" },
-        "when": { "S": "$context.arguments.when" },
-        "who": { "S": "$context.arguments.who" },
-        "description": { "S": "$context.arguments.description" }
+      "name": { "S": "$context.arguments.name" },
+      "where": { "S": "$context.arguments.where" },
+      "when": { "S": "$context.arguments.when" },
+      "who": { "S": "$context.arguments.who" },
+      "description": { "S": "$context.arguments.description" }
     }
 }
 ```
@@ -284,7 +284,7 @@ AWSコンソールの左メニューから `スキーマ` を選択すると、�
 
 ブラウザからAWSコンソールを通じてスキーマやリゾルバーの変更を行いましたが、
 
-実際には `AWS Cloudformation` や `Amplify Framework` などを用いると良いそうです。
+実際には `AWS Cloudformation` や `Amplify Framework` などを用いると良いそうです。
 
 ## まとめ
 
@@ -292,18 +292,29 @@ AWSコンソールの左メニューから `スキーマ` を選択すると、�
 
 + GraphQL は REST API に**比べて欲しいデータを欲しい形式で**得ることが可能
   
-+ GraphQlにより、画面や機能ごとに、**個別にAPIを定義するコストが削減**される
++ GraphQL により、画面や機能ごとに、**個別にAPIを定義するコストが削減**される
 
 + AppSync を使えばリソース（DynamoDB）との連携を楽に行うことができる
   
-+ REST API を AppSync でラップして、GraphQlを導入することも可能（未調査）
++ 既存の REST API を AppSync でラップして、GraphQL を導入することも可能らしい（未調査）
 
 
 ### デメリット
 
-+ GraphQl, Appsync の学習コストは少なからずかかる
++ GraphQL, Appsync の学習コストがかかる
+
++ フロントエンドの都合の良いように、値を返す必要があるため、リゾルバーのロジックが複雑になる
 
 + 効率的にデータを処理できないので、パフォーマンスが低下し、N+1問題が発生する
+
+※ N+1問題・・・ループ処理の中で都度SQLを発行してしまい、大量のSQLが発行されてパフォーマンスが低下してしまう問題のこと
+
+
+## 実際にAppSyncで実装してみたページ
+
+dynamoDB に入っているニュースのデータを AppSync を使って表示しています
+
+https://umamichi.com/news/
 
 
 ## 参考
@@ -311,5 +322,4 @@ AWSコンソールの左メニューから `スキーマ` を選択すると、�
 https://docs.aws.amazon.com/ja_jp/appsync/latest/devguide/welcome.html
 
 https://xp-cloud.jp/blog/2020/06/01/7159/
-
 
