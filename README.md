@@ -319,6 +319,10 @@ dynamoDB に入っているニュースのデータを AppSync を使って表�
 https://umamichi.com/news/
 
 
+## これから調べる
+
+`AWS_IAM` を使った AppSync 認証方法。 `Cognito` を使うらしいです
+
 ## 参考
 
 https://docs.aws.amazon.com/ja_jp/appsync/latest/devguide/welcome.html
