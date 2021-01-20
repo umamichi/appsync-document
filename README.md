@@ -3,7 +3,7 @@
 
 ## AppSyncとは？
 
-GraphQLというAPI仕様を用いて「柔軟なAPI」を提供するマネジメントサービス。AWSが提供している
+GraphQL というAPI仕様を用いて「柔軟なAPI」を提供するAWSのマネジメントサービス。
 
 対して、従来の REST API だと AWSは API Gateway を提供しています。
 
@@ -104,9 +104,9 @@ query ListEvents {
 }
 ```
 
-1つめの `mutation CreateEvent` は、新たなイベントを作成するための mutation です
+1つめの `mutation CreateEvent` は、新たな Event のデータを作成するための mutation です
 
-2つめの `query ListEvents` は、DBに登録されているイベントを取得するための query です
+2つめの `query ListEvents` は、DBに登録されている Event のデータを取得するための query です
 
 
 `CreateEvent` を何度か実行すると `ListEvents` の結果が変わることがわかります
@@ -130,13 +130,13 @@ query ListEvents {
 こちらに従って進めてみましょう -->
  
 
-### 実際にGraphQLを試してみる
+### フロントエンドからGraphQLを使ってリクエストしてみる
 
 Axios を使って試してみます
 
 [こちらにサンプルコードを用意しました](https://codepen.io/umamichi/pen/wvGqGvj)
 
-URL, API KEY を AppSyncコンソールの設定ページから見つけて、セットしてみてください
+URL と API KEY を AppSyncコンソールの設定ページから見つけて、セットしてみてください
 
 上手くいけば、GraphQLのresultが、consoleに表示されます
 
