@@ -2,15 +2,17 @@
 
 ![AppSync](https://user-images.githubusercontent.com/7469495/105184322-9179a580-5b72-11eb-8f73-5bbe20a686ec.png)
 
-## AppSyncとは？
+## AppSync とは？
 
-GraphQL というAPI仕様を用いて「柔軟なAPI」を提供するAWSのマネジメントサービス。
+GraphQL というAPI仕様を用いて「柔軟なAPI」を提供するAWSのマネジメントサービス
 
 ちなみに、従来の REST API 形式だと AWSは API Gateway を提供している
 
-## GraphQLとは？
+## GraphQL とは？
 
-Facebookが開発しているWeb APIのための規格。「クエリ言語」と「スキーマ言語」からなる。
+Facebookが開発しているWeb APIのための規格
+
+「クエリ言語」 と 「スキーマ言語」 からなる
 
 REST API は、1URLに対し1つのAPIや情報を提供できるのに対し、
 
@@ -41,13 +43,13 @@ query GetCurrentUser {
 
 ![AppSyncImage-1024x542](https://user-images.githubusercontent.com/7469495/94530035-773f5300-0275-11eb-8e38-8d1435ec7b44.png)
 
-AppSyncは直接DynamoDBの値を取得・更新・削除することができます。
+AppSyncは直接DynamoDBの値を取得・更新・削除することができます
 
 従来のAPI Gatewayだと、AWS Lambda が間に必要でしたが、
 
-AppSyncは **Lambda レス** でDynamoDBへのアクセスが可能です。
+AppSyncは **Lambda レス** でDynamoDBへのアクセスが可能です
 
-代わりに、AppSync内のリゾルバーという領域にロジックを記述します。
+代わりに、AppSync内のリゾルバーという領域にロジックを記述します
 
 ### クエリ
 
@@ -83,7 +85,7 @@ AppSyncは **Lambda レス** でDynamoDBへのアクセスが可能です。
 
 2.00USD ≒ 211.94 円 / リアルタイムアップデート 100 万回
 
-最初の12ヶ月の無料利用枠の対象でもあるようなので、登録後12ヶ月は一定回数は無料で使用できます。
+最初の12ヶ月の無料利用枠の対象でもあるようなので、登録後12ヶ月は一定回数は無料で使用できます
 
 [料金の詳細はこちら](https://aws.amazon.com/jp/appsync/pricing/)
 
@@ -97,7 +99,7 @@ AWS ログインして、AppSyncページへ移動し、「APIを作成」
 
 サンプルプロジェクトから「イベントアプリ」を選んで「開始」
 
-API 名は `[yourname] App` としてください。
+API 名は `[yourname] App` としてください
 
 左メニューから「クエリ」ページに移動すると、GraphQL Explorer が表示されます
 
@@ -110,8 +112,7 @@ API 名は `[yourname] App` としてください。
 ￼![image](https://user-images.githubusercontent.com/7469495/94671244-9b229780-034e-11eb-941a-3d4ee808f1c4.png)
 
 
-
-デフォルトで2つのクエリが用意されています。
+デフォルトで2つのクエリが用意されています
 
 ```
 mutation CreateEvent {
@@ -285,7 +286,7 @@ AWSコンソールの左メニューから `スキーマ` を選択すると、�
 
 ブラウザからAWSコンソールを通じてスキーマやリゾルバーの変更を行いましたが、
 
-実際には `AWS Cloudformation` や `Amplify Framework` などを用いると良いそうです。
+実際には `AWS Cloudformation` や `Amplify Framework` などを用いると良いそうです
 
 ## まとめ
 
