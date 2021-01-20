@@ -1,5 +1,6 @@
 ## AppSync & GraphQL 入門
 
+![AppSync](https://user-images.githubusercontent.com/7469495/105184322-9179a580-5b72-11eb-8f73-5bbe20a686ec.png)
 
 ## AppSyncとは？
 
